@@ -1,0 +1,74 @@
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "api"'
+      when: always
+    - when: never
+
+stages:
+  - build
+  - test
+  - docker
+  - deploy
+
+build-job:
+  stage: build
+  script:
+    - echo "Building the application..."
+      # Add your build commands here
+  tags:
+    - docker
+  artifacts:
+    paths:
+      - build/
+
+test-job:
+  stage: test
+  script:
+    - echo "Running the tests..."
+      # Add your test commands here
+  tags:
+    - docker
+
+docker-build-job:
+  stage: docker
+  script:
+    - echo "Building the Docker image..."
+      # Add your Docker build commands here
+  tags:
+    - docker
+
+docker-test-job:
+  stage: docker
+  needs: [docker-build-job]
+  script:
+    - echo "Building the Docker image..."
+      # Add your Docker build commands here
+  tags:
+    - docker
+
+docker-push-job:
+  stage: docker
+  needs: [docker-test-job]
+  script:
+    - echo "Pushing the Docker image to the registry..."
+      # Add your Docker push commands here
+  tags:
+    - docker
+
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Deploying the application..."
+      # Add your deploy commands here
+  tags:
+    - docker
+  environment:
+    name: dev
