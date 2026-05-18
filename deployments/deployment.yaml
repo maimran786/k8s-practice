@@ -1,21 +1,18 @@
 apiVersion: apps/v1
-kind: ReplicaSet
+kind: Deployment
 metadata:
-  name: nginx-replicaset
+  name: nginx-deployment
   labels:
-    app: nginx
-    env: prod
-spec:
+    tier: frontend
+spec: 
   replicas: 3
   selector:
     matchLabels:
-      app: nginx
-      env: prod
+      tier: frontend 
   template:
     metadata:
       labels:
-        app: nginx
-        env: prod
+        tier: frontend
     spec:
       containers:
       - name: nginx
